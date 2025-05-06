@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { FiSettings } from "react-icons/fi";
 import { ChatMessage } from "./components/ChatMessage";
 import { ChatInput } from "./components/ChatInput";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { QuickActions } from "./components/QuickActions";
 import axios from "axios";
-// import useApi from './API/Apihandler';
 import useAxios from "./API/Apihandler";
-import { tr } from "framer-motion/client";
 import Loader from "./components/Loader";
+import {
+  generateQuestionsMessage,
+  initialMessage,
+  processingMessage,
+  questionAnswerMessage,
+  summaryMessage,
+} from "./constant";
 
 interface Message {
   text: string;
@@ -19,13 +23,10 @@ interface Message {
 }
 
 function App() {
+  const fileInputRef = useRef<any>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: `**Hello!** Welcome to **File Talk AI**, your intelligent document assistant.
-
-How can I assist you in organizing, analyzing, or processing your documents today? Just ask away, and let’s make document management easier together!
-### Please select one of the options below to begin your journey with  **File Talk AI**.
-`,
+      text: initialMessage,
       isBot: true,
       id: 1,
       isInfo: true,
@@ -44,11 +45,24 @@ How can I assist you in organizing, analyzing, or processing your documents toda
       startedChatbot: localStorage.getItem("startedChatbot") ? true : false,
     });
     if (data) {
-      // console.log('Fetched data:', data);
       setFetchedActions(data.options);
       setShowQuickActions(true);
     }
   };
+
+  useEffect(() => {
+    localStorage.removeItem("startedChatbot");
+    localStorage.removeItem("documenturl");
+
+    fetchOptions();
+  }, [request]);
+
+  useEffect(() => {
+    if (messagesEndRef.current && showQuickActions) {
+      scrollToBottom();
+    }
+  }, [messages, showQuickActions]);
+
   const selectedOptionHandler = async (paramsData: any) => {
     const data = await request("POST", "conversation/", {
       documenturl: localStorage.getItem("documenturl")
@@ -58,10 +72,9 @@ How can I assist you in organizing, analyzing, or processing your documents toda
       action: paramsData.action,
     });
     if (data) {
-      console.log("Fetched data:", data);
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.text === "I'm processing your request 123..."
+          msg.text === processingMessage
             ? {
                 ...msg,
                 isTyping: false,
@@ -73,16 +86,8 @@ How can I assist you in organizing, analyzing, or processing your documents toda
         )
       );
       fetchOptions();
-
-      // setFetchedActions(data.options);
     }
   };
-  useEffect(() => {
-    localStorage.removeItem("startedChatbot");
-    localStorage.removeItem("documenturl");
-
-    fetchOptions();
-  }, [request]);
 
   const handleSendMessage = (message: string) => {
     setShowQuickActions(false);
@@ -92,7 +97,7 @@ How can I assist you in organizing, analyzing, or processing your documents toda
       ...prev,
       { text: message, isBot: false, id: Date.now(), isInfo: false },
       {
-        text: "I'm processing your request 123...",
+        text: processingMessage,
         isBot: true,
         id: botMessageId,
         isTyping: true,
@@ -102,20 +107,12 @@ How can I assist you in organizing, analyzing, or processing your documents toda
     selectedOptionHandler({ question: message, action: "question_answer" });
     // Simulate bot response after 2 seconds
   };
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  useEffect(() => {
-    if (messagesEndRef.current && showQuickActions) {
-      console.log("messagesEndRef.current", messagesEndRef.current);
-      scrollToBottom();
-    }
-  }, [messages, showQuickActions]);
-  // const [file, setFile] = useState<any>(null);
-  const fileInputRef = useRef<any>(null);
 
   const handleUpload = async (tempFile: any) => {
-    console.log("tempFile", tempFile);
     setIsFileUploadeLoading(true);
     const formData = new FormData();
     formData.append("file", tempFile);
@@ -148,7 +145,6 @@ How can I assist you in organizing, analyzing, or processing your documents toda
   };
 
   const handleOptionSelect = (action: string) => {
-    console.log("Selected action:", action);
     switch (action) {
       case "upload_document":
         setShowQuickActions(false);
@@ -160,8 +156,7 @@ How can I assist you in organizing, analyzing, or processing your documents toda
         setMessages((prev) => [
           ...prev,
           {
-            text: `You've selected the **Question & Answer** option! 💬  
-Just type your question in the input box, and I'll help you find the best answer. `,
+            text: questionAnswerMessage,
             isBot: false,
             id: Date.now(),
             isInfo: false,
@@ -177,15 +172,13 @@ Just type your question in the input box, and I'll help you find the best answer
         setMessages((prev) => [
           ...prev,
           {
-            text: `You've selected the **Summarizer** option! 📄✨  
-I'm analyzing your uploaded document to provide a concise summary.
-`,
+            text: summaryMessage,
             isBot: false,
             id: Date.now(),
             isInfo: false,
           },
           {
-            text: "I'm processing your request 123...",
+            text: processingMessage,
             isBot: true,
             id: Date.now() + 1,
             isTyping: true,
@@ -199,15 +192,13 @@ I'm analyzing your uploaded document to provide a concise summary.
         setMessages((prev) => [
           ...prev,
           {
-            text: `You've selected the **Generate Questions** option! ❓🧠  
-I'm getting ready to create thoughtful questions based on your content.
-`,
+            text: generateQuestionsMessage,
             isBot: false,
             id: Date.now(),
             isInfo: false,
           },
           {
-            text: "I'm processing your request 123...",
+            text: processingMessage,
             isBot: true,
             id: Date.now() + 1,
             isTyping: true,
@@ -215,16 +206,13 @@ I'm getting ready to create thoughtful questions based on your content.
           },
         ]);
         selectedOptionHandler({ action: "generate_questions" });
-
-        // selectedOptionHandler({question:"",action:"question_answer"});
-        // setShowInputMessage(true);
         break;
       case "main_menu":
         setShowQuickActions(false);
         setShowInputMessage(false);
         setMessages([
           {
-            text: "Hello! How can I help you today?",
+            text: initialMessage,
             isBot: true,
             id: 1,
             isInfo: true,

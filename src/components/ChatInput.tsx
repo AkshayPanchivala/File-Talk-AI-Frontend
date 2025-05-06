@@ -1,4 +1,3 @@
-import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { FiSend } from "react-icons/fi";
 
@@ -15,7 +14,7 @@ export function ChatInput({
   inputMessage,
   disabled,
 }: ChatInputProps) {
-  console.log("inputMessage", disabled);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputMessage.trim()) {
