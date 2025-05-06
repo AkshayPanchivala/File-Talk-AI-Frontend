@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { FaBars } from "react-icons/fa";
 import { FiUpload, FiHelpCircle, FiFileText, FiList } from "react-icons/fi";
 
 interface QuickActionsProps {
@@ -20,7 +21,7 @@ export function QuickActions({ onSelect, fetchedActions }: QuickActionsProps) {
       text: "Generate questions",
       action: "generate_questions",
     },
-    { icon: <FiList />, text: "Main Menu", action: "main_menu" },
+    { icon: <FaBars/>, text: "Main Menu", action: "main_menu" },
   ];
 
   return (

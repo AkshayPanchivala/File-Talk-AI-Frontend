@@ -1,11 +1,8 @@
 import { motion } from "framer-motion";
-import { FiCopy, FiSmile } from "react-icons/fi";
 import { TypingIndicator } from "./TypingIndicator";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import { useEffect, useState } from "react";
-// import TypingEffect from './TypingEffect';
-import "./TypingEffect.css";
 
 interface ChatMessageProps {
   message: string;
@@ -21,6 +18,7 @@ export function ChatMessage({
   isTyping = false,
 }: ChatMessageProps) {
   const [cleanHtml, setCleanHtml] = useState<string>("");
+
   useEffect(() => {
     const renderMarkdown = async () => {
       const rawHtml = await marked.parse(message); // Ensure it's awaited
@@ -30,10 +28,6 @@ export function ChatMessage({
 
     renderMarkdown();
   }, [message]);
-
-  const copyMessage = () => {
-    navigator.clipboard.writeText(message);
-  };
 
   return (
     <motion.div
@@ -54,13 +48,6 @@ export function ChatMessage({
             dangerouslySetInnerHTML={{ __html: cleanHtml }}
           ></div>
         )}
-
-        {/* <div className="absolute -right-12 top-1/2 -translate-y-1/2 hidden group-hover:flex gap-2">
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" onClick={copyMessage}>
-          <FiCopy className="w-4 h-4" />
-
-          </button>
-        </div> */}
       </div>
     </motion.div>
   );
