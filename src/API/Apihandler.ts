@@ -44,7 +44,8 @@ const useAxios = () => {
         });
         return response.data;
       } catch (err: any) {
-        setError(err.response?.data?.message || err.message || "Unknown error");
+        console.log("Error", err);
+        setError(err.response?.data?.error ||err.response?.data?.message|| err.message || err|| "Unknown error" );
         return null;
       } finally {
         setLoading(false);
