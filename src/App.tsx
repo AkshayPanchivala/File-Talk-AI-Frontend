@@ -13,6 +13,7 @@ import {
   questionAnswerMessage,
   summaryMessage,
 } from "./constant";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Message {
   text: string;
@@ -63,6 +64,32 @@ function App() {
     }
   }, [messages, showQuickActions]);
 
+  useEffect(()=>{
+    if(error){
+      console.log("Error",error);
+      setMessages((prev) =>
+        prev.filter((msg) => msg.text !== processingMessage)
+      );
+      setShowQuickActions(false);
+      setShowInputMessage(false);
+      localStorage.removeItem("startedChatbot");
+      localStorage.removeItem("documenturl");
+      fetchOptions();
+      toast.error('The file you provided might be password-protected, scanned as an image, or otherwise unreadable. Please upload a PDF that contains selectable text and is not protected by a password so I can assist you properly.', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+        });
+
+      // setFetchedActions([]);
+    }
+  },[error])
+
   const selectedOptionHandler = async (paramsData: any) => {
     const data = await request("POST", "conversation/", {
       documenturl: localStorage.getItem("documenturl")
@@ -78,7 +105,7 @@ function App() {
             ? {
                 ...msg,
                 isTyping: false,
-                text: data.content,
+                text: data.content.data,
                 isBot: true,
                 isInfo: true,
               }
@@ -135,9 +162,9 @@ function App() {
           isInfo: true,
         },
       ]);
+      setShowQuickActions(false);
       fetchOptions();
       setIsFileUploadeLoading(false);
-
       setShowQuickActions(true);
     } catch (err) {
       console.error("Upload Error", err);
@@ -147,7 +174,6 @@ function App() {
   const handleOptionSelect = (action: string) => {
     switch (action) {
       case "upload_document":
-        setShowQuickActions(false);
         fileInputRef?.current?.click();
         break;
       case "question_answer":
@@ -236,6 +262,7 @@ function App() {
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <input
+                accept=".pdf"
                 type="file"
                 className="hidden"
                 ref={fileInputRef}
@@ -279,6 +306,7 @@ function App() {
         </div>
       </div>
       {isFileUploadeLoading && <Loader />}
+      <ToastContainer />
     </div>
   );
 }
