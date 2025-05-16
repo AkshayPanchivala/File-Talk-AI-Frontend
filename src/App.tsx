@@ -39,13 +39,14 @@ function App() {
   const { request, loading, error } = useAxios();
   const [showInputMessage, setShowInputMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isFileUploadeLoading, setIsFileUploadeLoading] = useState(false);
+  const [isFileUploadeLoading, setIsFileUploadeLoading] = useState(true);
 
   const fetchOptions = async () => {
     const data = await request("POST", "conversation/options/", {
       startedChatbot: localStorage.getItem("startedChatbot") ? true : false,
     });
     if (data) {
+      setIsFileUploadeLoading(false)
       setFetchedActions(data.options);
       setShowQuickActions(true);
     }
