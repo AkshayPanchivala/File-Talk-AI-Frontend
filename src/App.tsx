@@ -12,6 +12,7 @@ import {
   processingMessage,
   questionAnswerMessage,
   summaryMessage,
+  fileUploadUrl
 } from "./constant";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -42,7 +43,7 @@ function App() {
   const [isFileUploadeLoading, setIsFileUploadeLoading] = useState(true);
 
   const fetchOptions = async () => {
-    const data = await request("POST", "conversation/options/", {
+    const data = await request("POST", "options/", {
       startedChatbot: localStorage.getItem("startedChatbot") ? true : false,
     });
     if (data) {
@@ -148,7 +149,7 @@ function App() {
 
     try {
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/ddhrg2lvw/raw/upload",
+        fileUploadUrl,
         formData
       );
       const fileUrl = res.data.secure_url;
