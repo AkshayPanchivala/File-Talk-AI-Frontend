@@ -5,7 +5,7 @@ This is the frontend for **File Talk AI**, a web application that allows users t
 
 ## 🔗 Live Demo
 
-👉 [Try File Talk AI Live](https://file-talk-ai-frontend.onrender.com)
+👉 [Try File Talk AI Live](https://filetalkai.vercel.app/)
 
 ## 🚀 Features
 
