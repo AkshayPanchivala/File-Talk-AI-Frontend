@@ -28,7 +28,7 @@ export function ChatInput({
       <TextareaAutosize
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
-        placeholder="Type a message..."
+        placeholder="Type a question..."
         maxRows={4}
         className={`flex-1 resize-none rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:bg-gray-200 disabled:text-gray-500`}
         onKeyDown={(e) => {
