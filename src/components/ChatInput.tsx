@@ -30,7 +30,10 @@ export function ChatInput({
         onChange={(e) => setInputMessage(e.target.value)}
         placeholder="Type a question..."
         maxRows={4}
-        className={`flex-1 resize-none rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:focus:ring-0 disabled:bg-gray-200 disabled:text-gray-500`}
+        className={`flex-1 resize-none rounded-2xl px-4 py-2 bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500
+    disabled:cursor-not-allowed disabled:focus:ring-0
+    disabled:bg-gray-200 disabled:dark:bg-gray-700
+    disabled:text-gray-500 disabled:placeholder:text-gray-400 disabled:opacity-60 disabled:grayscale`}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -43,7 +46,9 @@ export function ChatInput({
       <button
         type="submit"
         disabled={!disabled}
-        className={`p-3 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50`}
+         className={`p-3 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors
+    disabled:bg-gray-300 disabled:text-gray-500
+    disabled:cursor-not-allowed disabled:opacity-60 disabled:grayscale`}
       >
         <FiSend className="w-5 h-5" />
       </button>
