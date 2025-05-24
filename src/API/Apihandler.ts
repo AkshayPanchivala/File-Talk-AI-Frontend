@@ -22,8 +22,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Optionally log errors
-    // console.error('[Response Error]', error);
+    
     return Promise.reject(error);
   }
 );

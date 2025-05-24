@@ -68,7 +68,6 @@ function App() {
 
   useEffect(() => {
     if (error) {
-      console.log("Error", error);
       setMessages((prev) =>
         prev.filter((msg) => msg.text !== processingMessage)
       );
@@ -132,7 +131,6 @@ function App() {
   const handleUpload = async (tempFile: any) => {
     setIsFileUploadeLoading(true);
     const fileSize = tempFile.size / (1024 * 1024); // Convert to MB
-    console.log("File Size:", fileSize);
     if (fileSize > 10) {
       toast.error(
         "File size exceeds 10MB. Please upload a smaller file.",
@@ -176,7 +174,19 @@ function App() {
       setIsFileUploadeLoading(false);
       setShowQuickActions(true);
     } catch (err) {
-      console.error("Upload Error", err);
+      toast.error(
+        "Error uploading file. Please try again.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+        }
+      );
     }
   };
 
