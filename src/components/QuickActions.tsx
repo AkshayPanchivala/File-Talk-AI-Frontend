@@ -21,7 +21,7 @@ export function QuickActions({ onSelect, fetchedActions }: QuickActionsProps) {
       text: "Generate questions",
       action: "generate_questions",
     },
-    { icon: <FaBars/>, text: "Main Menu", action: "main_menu" },
+    { icon: <FaBars />, text: "Main Menu", action: "main_menu" },
   ];
 
   return (
@@ -36,10 +36,10 @@ export function QuickActions({ onSelect, fetchedActions }: QuickActionsProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => onSelect(action.action)}
-                className="flex items-center gap-3 p-4 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left"
+                className="flex items-center gap-3 p-4 rounded-xl bg-[#F0F4F8] dark:bg-[#1E293B] hover:bg-[#E2E8F0] dark:hover:bg-[#334155] transition-colors text-left"
               >
                 <span className="text-blue-500 text-xl">{action.icon}</span>
-                <span className="font-medium">{action.text}</span>
+                <span className="font-medium text-[#1E293B] dark:text-[#E2E8F0]">{action.text}</span>
               </motion.button>
             ))
         : null}
