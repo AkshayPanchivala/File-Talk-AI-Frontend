@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import axios from "axios";
 import { baseUrl } from "../constant";
+import { toast } from "react-toastify";
 
 const apiClient = axios.create({
   baseURL: baseUrl, // 🔁 Change to your base URL
@@ -46,6 +47,35 @@ const useAxios = () => {
       } catch (err: any) {
         console.log("Error", err);
         setError(err.response?.data?.error ||err.response?.data?.message|| err.message || err|| "Unknown error" );
+        if(err.response?.data?.error ||err.response?.data?.message|| err.message || err|| "Unknown error"){
+           toast.error(
+        `Error: ${err.response?.data?.error || err.response?.data?.message || err.message || err || "Unknown error"}`,
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+        }
+      );
+        }else{
+          toast.error(
+            `currentely server is down, please try again later`,
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+            }
+          );
+        }
         return null;
       } finally {
         setLoading(false);

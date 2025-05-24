@@ -1,106 +1,71 @@
-/* Loader container */
 .loading {
   position: fixed;
-  /* Make the loader fixed on screen */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  /* Dark overlay */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
-  /* Ensure it stays on top */
 }
 
-/* Hide all child elements within the loader */
-.loading * {
-  display: none;
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+  border: 4px solid transparent;
+  border-radius: 50%;
+  border-top-color: #3b4dd1; /* Default (light) */
+  animation: spin 1s linear infinite;
+  position: relative;
 }
 
-/* Dot loader itself */
-.dots-loader:not(:required) {
-  opacity: 1;
-  overflow: hidden;
+.loader::before,
+.loader::after {
+  content: "";
+  grid-area: 1/1;
+  border: 4px solid transparent;
+  border-radius: 50%;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  margin-left: -4px;
-  margin-top: -4px;
-  text-indent: -9999px;
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: transparent;
-  border-radius: 100%;
-  box-shadow: #f86 -14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  animation: dots-loader 5s infinite ease-in-out;
-  transform-origin: 50% 50%;
-  transform: scale(1);
-  transition: .3s all;
 }
 
-/* Keyframes for dot animation */
-@keyframes dots-loader {
-  0% {
-    box-shadow: #f86 -14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  }
+.loader::before {
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-top-color: #324095;
+  animation: spin 0.5s linear infinite reverse;
+}
 
-  8.33% {
-    box-shadow: #f86 14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  }
+.loader::after {
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-top-color: #6b7cff;
+  animation: spin 1.2s linear infinite;
+}
 
-  16.67% {
-    box-shadow: #f86 14px 14px 0 7px, #fc6 14px 14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  }
-
-  25% {
-    box-shadow: #f86 -14px 14px 0 7px, #fc6 -14px 14px 0 7px, #6d7 -14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  }
-
-  33.33% {
-    box-shadow: #f86 -14px -14px 0 7px, #fc6 -14px 14px 0 7px, #6d7 -14px -14px 0 7px, #4ae -14px -14px 0 7px;
-  }
-
-  41.67% {
-    box-shadow: #f86 14px -14px 0 7px, #fc6 -14px 14px 0 7px, #6d7 -14px -14px 0 7px, #4ae 14px -14px 0 7px;
-  }
-
-  50% {
-    box-shadow: #f86 14px 14px 0 7px, #fc6 -14px 14px 0 7px, #6d7 -14px -14px 0 7px, #4ae 14px -14px 0 7px;
-  }
-
-  58.33% {
-    box-shadow: #f86 -14px 14px 0 7px, #fc6 -14px 14px 0 7px, #6d7 -14px -14px 0 7px, #4ae 14px -14px 0 7px;
-  }
-
-  66.67% {
-    box-shadow: #f86 -14px -14px 0 7px, #fc6 -14px -14px 0 7px, #6d7 -14px -14px 0 7px, #4ae 14px -14px 0 7px;
-  }
-
-  75% {
-    box-shadow: #f86 14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px -14px 0 7px, #4ae 14px -14px 0 7px;
-  }
-
-  83.33% {
-    box-shadow: #f86 14px 14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae 14px 14px 0 7px;
-  }
-
-  91.67% {
-    box-shadow: #f86 -14px 14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
-  }
-
-  100% {
-    box-shadow: #f86 -14px -14px 0 7px, #fc6 14px -14px 0 7px, #6d7 14px 14px 0 7px, #4ae -14px 14px 0 7px;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-/* Hide the loader when it's done */
-.loaded .dots-loader {
-  opacity: 0;
-  z-index: -1;
-  pointer-events: none;
-  transform: scale(0);
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .loader {
+    border-top-color: #3b4dd1;
+  }
+
+  .loader::before {
+    border-top-color: #6b7cff;
+  }
+
+  .loader::after {
+    border-top-color: #ffffff;
+  }
 }

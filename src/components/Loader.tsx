@@ -1,10 +1,11 @@
-import "./Loader.css"; // Assuming you want to keep styles in a separate CSS file
+import "./Loader.css";
 
 const Loader = () => {
   return (
-    <div className="loading">
-      <div className="dots-loader"></div>
+  <div className="loading">
+      <div className="loader" />
     </div>
+
   );
 };
 

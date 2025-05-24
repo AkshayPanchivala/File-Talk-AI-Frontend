@@ -66,9 +66,9 @@ function App() {
     }
   }, [messages, showQuickActions]);
 
-  useEffect(()=>{
-    if(error){
-      console.log("Error",error);
+  useEffect(() => {
+    if (error) {
+      console.log("Error", error);
       setMessages((prev) =>
         prev.filter((msg) => msg.text !== processingMessage)
       );
@@ -77,20 +77,9 @@ function App() {
       localStorage.removeItem("startedChatbot");
       localStorage.removeItem("documenturl");
       fetchOptions();
-      toast.error('The file you provided might be password-protected, scanned as an image, or otherwise unreadable. Please upload a PDF that contains selectable text and is not protected by a password so I can assist you properly.', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
-        });
-
-      // setFetchedActions([]);
+     
     }
-  },[error])
+  }, [error]);
 
   const selectedOptionHandler = async (paramsData: any) => {
     const data = await request("POST", "conversation/", {
@@ -134,7 +123,6 @@ function App() {
       },
     ]);
     selectedOptionHandler({ question: message, action: "question_answer" });
-    // Simulate bot response after 2 seconds
   };
 
   const scrollToBottom = () => {
@@ -143,9 +131,28 @@ function App() {
 
   const handleUpload = async (tempFile: any) => {
     setIsFileUploadeLoading(true);
+    const fileSize = tempFile.size / (1024 * 1024); // Convert to MB
+    console.log("File Size:", fileSize);
+    if (fileSize > 10) {
+      toast.error(
+        "File size exceeds 10MB. Please upload a smaller file.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+        }
+      );
+      setIsFileUploadeLoading(false);
+      return;
+    }
     const formData = new FormData();
     formData.append("file", tempFile);
-    formData.append("upload_preset", "NewDocGPT"); // Replace with your preset
+    formData.append("upload_preset", "NewDocGPT");
 
     try {
       const res = await axios.post(
@@ -180,7 +187,6 @@ function App() {
         break;
       case "question_answer":
         setShowQuickActions(false);
-        // selectedOptionHandler({question:"",action:"question_answer"});
         setMessages((prev) => [
           ...prev,
           {
@@ -191,9 +197,6 @@ function App() {
           },
         ]);
         setShowInputMessage(true);
-
-        // handleSendMessage(inputMessage);
-
         break;
       case "summarizer":
         setShowQuickActions(false);
@@ -248,23 +251,22 @@ function App() {
         ]);
         localStorage.removeItem("startedChatbot");
         localStorage.removeItem("documenturl");
-
         fetchOptions();
-
         break;
     }
   };
+
   return (
-    <div className=" bg-gray-100 dark:bg-gray-900  pt-4 pb-4">
-      <div className="h-[calc(100vh-32px)] bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 ">
-        <div className="h-full max-w-7xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
+    <div className="bg-gray-100 dark:bg-[#37383b] pt-4 pb-4">
+      <div className="h-[calc(100vh-32px)] bg-gray-100 dark:bg-[#37383b] text-gray-900 dark:text-gray-100">
+        <div className="h-full max-w-7xl mx-auto bg-white dark:bg-[#22262b] rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
           {/* Header */}
           <header className="flex items-center w-full justify-between px-6 py-4 border-b dark:border-gray-700">
             <h1 className="text-xl font-semibold">File Talk AI</h1>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <input
-                accept=".pdf"
+                accept="application/pdf"
                 type="file"
                 className="hidden"
                 ref={fileInputRef}
@@ -273,8 +275,8 @@ function App() {
             </div>
           </header>
 
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="">
+          <div className="flex-1 overflow-y-auto p-6 scroll-container">
+            <div>
               {messages.map((message) => (
                 <ChatMessage
                   key={message.id}
@@ -288,6 +290,7 @@ function App() {
                 <QuickActions
                   onSelect={handleOptionSelect}
                   fetchedActions={fetchedActions}
+               
                 />
               )}
               <div ref={messagesEndRef} />
@@ -296,14 +299,12 @@ function App() {
 
           {/* Input Area */}
           <div className="border-t w-full dark:border-gray-700">
-            <div className=" ">
-              <ChatInput
-                onSend={handleSendMessage}
-                disabled={showInputMessage}
-                setInputMessage={setInputMessage}
-                inputMessage={inputMessage}
-              />
-            </div>
+            <ChatInput
+              onSend={handleSendMessage}
+              disabled={showInputMessage}
+              setInputMessage={setInputMessage}
+              inputMessage={inputMessage}
+            />
           </div>
         </div>
       </div>

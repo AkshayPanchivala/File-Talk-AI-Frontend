@@ -21,7 +21,7 @@ export function ChatMessage({
 
   useEffect(() => {
     const renderMarkdown = async () => {
-      const rawHtml = await marked.parse(message); // Ensure it's awaited
+      const rawHtml = await marked.parse(message);
       const sanitizedHtml = DOMPurify.sanitize(rawHtml);
       setCleanHtml(sanitizedHtml);
     };
@@ -37,7 +37,9 @@ export function ChatMessage({
     >
       <div
         className={`relative group max-w-[80%] px-4 py-2 rounded-2xl ${
-          isBot ? "bg-gray-100 dark:bg-gray-800" : "bg-blue-500 text-white"
+          isBot
+            ? "bg-[#F0F4F8] dark:bg-[#1E293B] text-[#1E293B] dark:text-[#E2E8F0]"
+            : "bg-blue-500 text-white"
         }`}
       >
         {isTyping ? (

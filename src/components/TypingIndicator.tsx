@@ -6,7 +6,7 @@ export function TypingIndicator() {
       {[1, 2, 3].map((dot) => (
         <motion.div
           key={dot}
-          className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full"
+          className="w-2 h-2 bg-[#3b4dd1] dark:bg-[#3b4dd1] rounded-full"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{
